@@ -4,7 +4,7 @@ Azure Devops - PipelineScript
 
 #!/bin/bash
 
-# ======= Global Configuration =======
+-> Global Configuration
 ACR_NAME="youracrname"  # Replace with your Azure Container Registry name (e.g., "myacr")
 RESOURCE_GROUP="your-resource-group"  # Replace with your Azure Resource Group
 DOCKERFILES=("Dockerfile1" "Dockerfile2" "Dockerfile3")  # List of Dockerfiles to track
@@ -12,15 +12,15 @@ IMAGE_PREFIX="yourimageprefix"  # Prefix for the image names in ACR
 LOG_FILE="/var/log/azure_acr_push.log"
 DATE_FORMAT="%Y-%m-%d_%H-%M-%S"
 
-# ======= Function Definitions =======
+-> Function Definitions 
 
-# Logs messages with timestamp
+-> Logs messages with timestamp
 log_message() {
     local message="$1"
     printf "[%s] %s\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$message" >> "$LOG_FILE"
 }
 
-# Login to Azure Container Registry
+-> Login to Azure Container Registry
 login_to_acr() {
     log_message "INFO: Logging in to Azure Container Registry: $ACR_NAME"
     if ! az acr login --name "$ACR_NAME"; then
@@ -30,7 +30,8 @@ login_to_acr() {
     log_message "INFO: Successfully logged in to ACR: $ACR_NAME"
 }
 
-# Check if Dockerfile has been updated in the Git repo
+-> Check if Dockerfile has been updated in the Git repo
+
 check_dockerfile_updates() {
     local dockerfile="$1"
     if git diff --name-only HEAD~1 | grep -q "$dockerfile"; then
@@ -42,7 +43,8 @@ check_dockerfile_updates() {
     fi
 }
 
-# Build, Tag, and Push Docker image to ACR
+-> Build, Tag, and Push Docker image to ACR
+
 build_and_push_image() {
     local dockerfile="$1"
     local image_name image_tag
@@ -68,7 +70,7 @@ build_and_push_image() {
     log_message "INFO: Successfully pushed image to ACR: ${ACR_NAME}.azurecr.io/${image_name}:${image_tag}"
 }
 
-# Main function to process Dockerfiles
+-> Main function to process Dockerfiles
 main() {
     log_message "INFO: Starting the process to build and push Docker images to ACR"
 
@@ -92,5 +94,5 @@ main() {
     log_message "INFO: Docker image build and push process completed successfully"
 }
 
-# Execute the main function
+-> Execute the main function
 main
